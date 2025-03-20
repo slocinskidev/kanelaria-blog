@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { contentMenu, mainMenu } from "@/lib/menu.config";
 import { siteConfig } from "@/lib/site.config";
 import { Analytics } from "@vercel/analytics/react";
-import type { Metadata } from "next";
-import { Inter as FontSans } from "next/font/google";
+import { NextIntlClientProvider, useTranslations } from "next-intl";
+import { Merriweather } from "next/font/google";
 
 import Logo from "@/public/logo.svg";
 import Image from "next/image";
@@ -17,89 +17,101 @@ import Link from "next/link";
 import Balancer from "react-wrap-balancer";
 
 import { cn } from "@/lib/utils";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
+import { ReactNode } from "react";
+import { useNavigationConfig } from "./use-navigation-config";
 
-const font = FontSans({
+const font = Merriweather({
   subsets: ["latin"],
+  display: "swap",
+  weight: ["300", "400", "700", "900"],
   variable: "--font-sans",
 });
 
-export const metadata: Metadata = {
-  title: "WordPress & Next.js Starter by 9d8",
-  description:
-    "A starter template for Next.js with WordPress as a headless CMS.",
-  metadataBase: new URL(siteConfig.site_domain),
-  alternates: {
-    canonical: "/",
-  },
+type MetadataProps = {
+  params: Promise<{
+    locale: string;
+  }>;
 };
 
-export default function RootLayout({
+export async function generateMetadata(props: MetadataProps) {
+  const params = await props.params;
+
+  const { locale } = params;
+
+  const t = await getTranslations({ locale });
+
+  return {
+    title: t("metadata.title"),
+    description: t("metadata.description"),
+  };
+}
+
+export default async function RootLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: Readonly<{
+  children: ReactNode;
+}>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head />
       <body className={cn("min-h-screen font-sans antialiased", font.variable)}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Nav />
-          {children}
-          <Footer />
-        </ThemeProvider>
+        <NextIntlClientProvider messages={messages}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Header />
+            {children}
+            <Footer />
+          </ThemeProvider>
+        </NextIntlClientProvider>
         <Analytics />
       </body>
     </html>
   );
 }
 
-const Nav = ({ className, children, id }: NavProps) => {
+const Header = () => {
+  const t = useTranslations();
+
+  const navItems = useNavigationConfig();
+
   return (
-    <nav
-      className={cn("sticky z-50 top-0 bg-background", "border-b", className)}
-      id={id}
-    >
-      <div
-        id="nav-container"
-        className="max-w-5xl mx-auto py-4 px-6 sm:px-8 flex justify-between items-center"
-      >
-        <Link
-          className="hover:opacity-75 transition-all flex gap-4 items-center"
-          href="/"
-        >
-          <Image
-            src={Logo}
-            alt="Logo"
-            loading="eager"
-            className="dark:invert"
-            width={42}
-            height={26.44}
-          ></Image>
-          <h2 className="text-sm">{siteConfig.site_name}</h2>
-        </Link>
-        {children}
-        <div className="flex items-center gap-2">
-          <div className="mx-2 hidden md:flex">
-            {Object.entries(mainMenu).map(([key, href]) => (
-              <Button key={href} asChild variant="ghost" size="sm">
-                <Link href={href}>
-                  {key.charAt(0).toUpperCase() + key.slice(1)}
-                </Link>
-              </Button>
-            ))}
+    <header className="sticky top-0 z-50 bg-white px-4 shadow-sm md:bg-background md:shadow-none xl:px-10">
+      <div className="mx-auto max-w-screen-xl">
+        <div className="flex h-16 items-center justify-between">
+          <Link href="/">
+            <p className="max-w-52 text-sm font-bold uppercase text-primary lg:max-w-none lg:text-xl">
+              {t("metadata.title")}
+            </p>
+            <span className="sr-only">{t("homePage")}</span>
+          </Link>
+
+          <div className="flex items-center gap-2">
+            <div className="mx-2 hidden md:flex">
+              {navItems.map((item) => (
+                <Button
+                  key={item.path}
+                  asChild
+                  variant="ghost"
+                  size="sm"
+                  className="font-bold"
+                >
+                  <Link href={item.path}>{item.label}</Link>
+                </Button>
+              ))}
+            </div>
+            <MobileNav />
           </div>
-          <Button asChild className="hidden sm:flex">
-            <Link href="https://github.com/9d8dev/next-wp">Get Started</Link>
-          </Button>
-          <MobileNav />
         </div>
       </div>
-    </nav>
+    </header>
   );
 };
 

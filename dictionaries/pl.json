@@ -15,12 +15,6 @@
     "description": "Jestem prawniczką z wieloletnim doświadczeniem zarówno teoretycznym jak i praktycznym.\n\nW 2000 r. obroniłam doktorat z zakresu prawa ochrony środowiska na UMCS w Lublinie. Ponad 20 lat byłam pracownikiem naukowym w takich uczelniach jak Uniwersytet Śląski oraz Politechnika Śląska. Od 2012r. prowadzę także kancelarię adwokacką, w której ani ja, ani moi współpracownicy nie boimy się wyzwań. Do każdej sprawy podchodzimy indywidualnie i z należytą starannością.\n\nCzęsto się zdarza, że nasi klienci do nas wracają - to chyba najlepsza rekomendacja naszych usług.",
     "title": "Kancelaria Adwokacka dr Hanna Walczak"
   },
-  "pageSectionId": {
-    "ABOUT_ME": "o-mnie",
-    "CONTACT": "kontakt",
-    "HOME": "strona-glowna",
-    "WHAT_WE_DO": "czym-sie-zajmujemy"
-  },
   "phoneNumber": "Numer telefonu",
   "whatWeDo": "Czym się zajmujemy",
   "whatWeDoList": [
@@ -32,5 +26,10 @@
     "Prowadzimy sprawy dotyczące kredytów frankowych.",
     "Zajmujemy się również sprawami z zakresu prawa pracy, takimi jak przywrócenie do pracy pracownika, odszkodowania i inne."
   ],
-  "whereFindUsWithQuestionMark": "Gdzie nas znaleźć?"
+  "whereFindUsWithQuestionMark": "Gdzie nas znaleźć?",
+  "mainNavigation": {
+    "aboutPage": "O nas",
+    "blogPage": "Blog",
+    "homePage": "Strona główna"
+  }
 }

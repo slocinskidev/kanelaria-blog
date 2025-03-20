@@ -38,7 +38,7 @@ export function MobileNav() {
           <span className="sr-only">Toggle Menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="pr-0">
+      <SheetContent side="right">
         <SheetHeader>
           <SheetTitle className="text-left">
             <MobileLink
