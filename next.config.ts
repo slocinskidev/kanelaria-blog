@@ -1,3 +1,7 @@
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin();
+
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -5,7 +9,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: `${process.env.WORDPRESS_HOSTNAME}`,
+        hostname: `${process.env.NEXT_PUBLIC_WORDPRESS_API_HOSTNAME}`,
         port: "",
         pathname: "/**",
       },
@@ -15,11 +19,11 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/admin",
-        destination: `${process.env.WORDPRESS_URL}/wp-admin`,
+        destination: `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/wp-admin`,
         permanent: true,
       },
     ];
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);
